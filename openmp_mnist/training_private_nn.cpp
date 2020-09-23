@@ -1,12 +1,4 @@
-/*
-Author: Jordan Ott
-Date: 03/04/2017
-Description:
-This is a single layer neural network for the mnist data set
-Copies of this network will be made in threads to parallelize the training of the network
 
-This code is adapted from: https://github.com/HyTruongSon/Neural-Network-MNIST-CPP
-*/
 #include <omp.h>
 #include <iostream>
 #include <fstream>
@@ -25,10 +17,10 @@ using namespace std;
 
 #define NUM_THREADS 12
 // Training image file name
-const string training_image_fn = "mnist/train-images.idx3-ubyte";
+const string training_image_fn = "../mnist/train-images.idx3-ubyte";
 
 // Training label file name
-const string training_label_fn = "mnist/train-labels.idx1-ubyte";
+const string training_label_fn = "../mnist/train-labels.idx1-ubyte";
 
 // Weights file name
 const string model_fn = "model-neural-network.dat";
@@ -37,7 +29,7 @@ const string model_fn = "model-neural-network.dat";
 const string report_fn = "training-report.dat";
 
 // Number of training samples
-const int nTraining = 50000;
+const int nTraining = 500;
 
 // Image size in MNIST database
 const int width = 28;
@@ -54,7 +46,7 @@ const int height = 28;
 const int n1 = 784; // = 784, without bias neuron 
 const int n2 = 128; 
 const int n3 = 10; // Ten classes: 0 - 9
-const int epochs = 512;
+const int epochs = 10;
 const double learning_rate = 1e-3;
 const double momentum = 0.9;
 const double epsilon = 1e-3;
@@ -67,8 +59,8 @@ double *global_w2[n2];
 
 
 
-double mnist_training_data[60000][784];
-double mnist_label_data[60000][10];
+double mnist_training_data[600][784];
+double mnist_label_data[600][10];
 // File stream to write down a report
 ofstream report;
 
@@ -87,7 +79,7 @@ int ReverseInt (int i)
 }
 void Read_MNIST_training(int NumberOfImages, int DataOfAnImage)
 {
-    ifstream file ("mnist/train-images.idx3-ubyte",ios::binary);
+    ifstream file ("../mnist/train-images.idx3-ubyte",ios::binary);
     if (file.is_open())
     {
         int magic_number=0;
@@ -125,7 +117,7 @@ void Read_MNIST_training(int NumberOfImages, int DataOfAnImage)
 }
 void Read_MNIST_label(int number_of_images,int i)
 {
-    ifstream file ("mnist/train-labels.idx1-ubyte",ios::binary);
+    ifstream file ("../mnist/train-labels.idx1-ubyte",ios::binary);
 
     if (file.is_open())
     {
@@ -165,7 +157,7 @@ void about() {
 	cout << "No. hidden neurons: " << n2 << endl;
 	cout << "No. output neurons: " << n3 << endl;
 	cout << endl;
-	cout << "No. iterations: " << epochs << endl;
+	cout << "Total No. iterations: " << epochs << endl;
 	cout << "Learning rate: " << learning_rate << endl;
 	cout << "Momentum: " << momentum << endl;
 	cout << "Epsilon: " << epsilon << endl;
@@ -248,8 +240,8 @@ void write_matrix(string file_name) {
 // +--------------+
 
 int main(int argc, char *argv[]) {
-    Read_MNIST_training(50000,784);
-    Read_MNIST_label(50000,10);
+    Read_MNIST_training(500,784);
+    Read_MNIST_label(500,10);
     
     about();
 
@@ -299,117 +291,119 @@ int main(int argc, char *argv[]) {
             }
         }
 
-
-        #pragma omp for 
-        for (int sample =0; sample < 50000; ++sample) {
-            //cout << omp_get_thread_num() << " : " << omp_get_num_threads() << endl;
-            // GET SAMPLE
-            for (int i =0; i < 784; ++i) {
-                out1[i] = mnist_training_data[sample][i];
-            }
-            for (int i = 0; i < n3; ++i) {
-                expected[i] = mnist_label_data[sample][i];
-            }
-
-
-    		// Learning process
-            for (int i =0; i < n1; ++i) {
-                for (int j =0; j < n2; ++j) {
-                    delta1[i][j] = 0.0;
+        for(int r =0;r<epochs;r++){
+            #pragma omp for 
+            for (int sample =0; sample < 500; ++sample) {
+                //cout << omp_get_thread_num() << " : " << omp_get_num_threads() << endl;
+                // GET SAMPLE
+                for (int i =0; i < 784; ++i) {
+                    out1[i] = mnist_training_data[sample][i];
                 }
-            }
-
-            for (int i =0; i < n2; ++i) {
-                for (int j =0; j < n3; ++j) {
-                    delta2[i][j] = 0.0;
-                }
-            }
-
-            for (int i =0; i < epochs; ++i) {
-                // forward 
-                for (int i =0; i < n2; ++i) {
-                    in2[i] = 0.0;
+                for (int i = 0; i < n3; ++i) {
+                    expected[i] = mnist_label_data[sample][i];
                 }
 
-                for (int i =0; i < n3; ++i) {
-                    in3[i] = 0.0;
-                }
 
+                // Learning process
                 for (int i =0; i < n1; ++i) {
                     for (int j =0; j < n2; ++j) {
-                        in2[j] += out1[i] * w1[i][j];
+                        delta1[i][j] = 0.0;
                     }
-                }
-
-                for (int i =0; i < n2; ++i) {
-                    out2[i] = sigmoid(in2[i]);
                 }
 
                 for (int i =0; i < n2; ++i) {
                     for (int j =0; j < n3; ++j) {
-                        in3[j] += out2[i] * w2[i][j];
+                        delta2[i][j] = 0.0;
                     }
                 }
 
-                for (int i =0; i < n3; ++i) {
-                    out3[i] = sigmoid(in3[i]);
-                }
-
-                // back prop
-                double sum;
-                for (int i =0; i < n3; ++i) {
-                    theta3[i] = out3[i] * (1 - out3[i]) * (expected[i] - out3[i]);
-                }
-
-                for (int i =0; i < n2; ++i) {
-                    sum = 0.0;
-                    for (int j =0; j < n3; ++j) {
-                        sum += w2[i][j] * theta3[j];
+                for (int i =0; i < epochs; ++i) {
+                    // forward 
+                    for (int i =0; i < n2; ++i) {
+                        in2[i] = 0.0;
                     }
-                    theta2[i] = out2[i] * (1 - out2[i]) * sum;
-                }
 
-                for (int i =0; i < n2; ++i) {
-                    for (int j =0; j < n3; ++j) {
-                        delta2[i][j] = (learning_rate * theta3[j] * out2[i]) + (momentum * delta2[i][j]);
-                        w2[i][j] += delta2[i][j];
-                        
+                    for (int i =0; i < n3; ++i) {
+                        in3[i] = 0.0;
                     }
-                }
 
-                for (int i =0; i < n1; ++i) {
-                    for (int j = 0 ; j < n2 ; j++ ) {
-                        delta1[i][j] = (learning_rate * theta2[j] * out1[i]) + (momentum * delta1[i][j]);
-                        w1[i][j] += delta1[i][j];
-                        
+                    for (int i =0; i < n1; ++i) {
+                        for (int j =0; j < n2; ++j) {
+                            in2[j] += out1[i] * w1[i][j];
+                        }
                     }
-                }
-            }
-            if((sample + 1) % sample_per_thread == 0)
-            {
-                for (int i =0; i < n1; ++i) {
-                    for (int j = 0; j < n2 ; j++ ) {
-                        #pragma omp critical
-                        {
-                            global_w1[i][j] += w1[i][j];
+
+                    for (int i =0; i < n2; ++i) {
+                        out2[i] = sigmoid(in2[i]);
+                    }
+
+                    for (int i =0; i < n2; ++i) {
+                        for (int j =0; j < n3; ++j) {
+                            in3[j] += out2[i] * w2[i][j];
+                        }
+                    }
+
+                    for (int i =0; i < n3; ++i) {
+                        out3[i] = sigmoid(in3[i]);
+                    }
+
+                    // back prop
+                    double sum;
+                    for (int i =0; i < n3; ++i) {
+                        theta3[i] = out3[i] * (1 - out3[i]) * (expected[i] - out3[i]);
+                    }
+
+                    for (int i =0; i < n2; ++i) {
+                        sum = 0.0;
+                        for (int j =0; j < n3; ++j) {
+                            sum += w2[i][j] * theta3[j];
+                        }
+                        theta2[i] = out2[i] * (1 - out2[i]) * sum;
+                    }
+
+                    for (int i =0; i < n2; ++i) {
+                        for (int j =0; j < n3; ++j) {
+                            delta2[i][j] = (learning_rate * theta3[j] * out2[i]) + (momentum * delta2[i][j]);
+                            w2[i][j] += delta2[i][j];
+                            
+                        }
+                    }
+
+                    for (int i =0; i < n1; ++i) {
+                        for (int j = 0 ; j < n2 ; j++ ) {
+                            delta1[i][j] = (learning_rate * theta2[j] * out1[i]) + (momentum * delta1[i][j]);
+                            w1[i][j] += delta1[i][j];
+                            
                         }
                     }
                 }
-                for (int i =0; i < n2; ++i) {
-                    for (int j = 0; j < n3 ; j++ ) {
-                        #pragma omp critical
-                        {
-                            global_w2[i][j] += w2[i][j];
+                if((sample + 1) % sample_per_thread == 0)
+                {
+                    for (int i =0; i < n1; ++i) {
+                        for (int j = 0; j < n2 ; j++ ) {
+                            #pragma omp critical
+                            {
+                                global_w1[i][j] += w1[i][j];
+                            }
+                        }
+                    }
+                    for (int i =0; i < n2; ++i) {
+                        for (int j = 0; j < n3 ; j++ ) {
+                            #pragma omp critical
+                            {
+                                global_w2[i][j] += w2[i][j];
+                            }
                         }
                     }
                 }
-            }
-            
+                
+            }                       
         }
+        
     }
 	clock_t end = clock();
     double elapsed_secs = double(end - begin) / CLOCKS_PER_SEC;
-
+    cout<<"Elapsed time: "<<elapsed_secs<<" seconds"<<"\n";
     for (int i =0; i < n1; ++i) {
         for (int j = 0; j < n2 ; j++ ) {
            // global_w1[i][j] /= NUM_THREADS;

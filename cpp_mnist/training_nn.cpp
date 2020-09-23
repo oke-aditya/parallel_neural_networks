@@ -14,6 +14,7 @@
 #include <cstdio>
 #include <cstdlib>
 #include <cmath>
+#include <ctime>
 #include <vector>
 #include <set>
 #include <iterator>
@@ -22,10 +23,10 @@
 using namespace std;
 
 // Training image file name
-const string training_image_fn = "mnist/train-images.idx3-ubyte";
+const string training_image_fn = "../mnist/train-images.idx3-ubyte";
 
 // Training label file name
-const string training_label_fn = "mnist/train-labels.idx1-ubyte";
+const string training_label_fn = "../mnist/train-labels.idx1-ubyte";
 
 // Weights file name
 const string model_fn = "model-neural-network.dat";
@@ -34,7 +35,7 @@ const string model_fn = "model-neural-network.dat";
 const string report_fn = "training-report.dat";
 
 // Number of training samples
-const int nTraining = 60000;
+const int nTraining = 500;
 
 // Image size in MNIST database
 const int width = 28;
@@ -51,7 +52,7 @@ const int height = 28;
 const int n1 = width * height; // = 784, without bias neuron 
 const int n2 = 128; 
 const int n3 = 10; // Ten classes: 0 - 9
-const int epochs = 512;
+const int epochs = 10;
 const double learning_rate = 1e-3;
 const double momentum = 0.9;
 const double epsilon = 1e-3;
@@ -353,6 +354,8 @@ int main(int argc, char *argv[]) {
     image.open(training_image_fn.c_str(), ios::in | ios::binary); // Binary image file
     label.open(training_label_fn.c_str(), ios::in | ios::binary ); // Binary label file
 
+    //Time begins
+    clock_t begin = clock();
 	// Reading file headers
     char number;
     for (int i = 1; i <= 16; ++i) {
@@ -375,7 +378,7 @@ int main(int argc, char *argv[]) {
         int nIterations = learning_process();
 
 		// Write down the squared error
-		cout << "No. iterations: " << nIterations << endl;
+		cout << "Total No. iterations: " << nIterations << endl;
         printf("Error: %0.6lf\n\n", square_error());
         report << "Sample " << sample << ": No. iterations = " << nIterations << ", Error = " << square_error() << endl;
 		
@@ -385,7 +388,9 @@ int main(int argc, char *argv[]) {
 			write_matrix(model_fn);
 		}
     }
-	
+	clock_t end = clock();
+    double elapsed_time = double(end-begin)/CLOCKS_PER_SEC;
+    cout<<"Time elapsed: "<<elapsed_time<<" seconds"<<"\n";
 	// Save the final network
     write_matrix(model_fn);
 
