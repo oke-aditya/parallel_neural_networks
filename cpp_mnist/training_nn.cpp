@@ -392,6 +392,7 @@ int main(int argc, char *argv[]) {
         }
     }
     
+
 	clock_t end = clock();
     double elapsed_time = double(end-begin)/CLOCKS_PER_SEC;
     cout<<"Time elapsed: "<<elapsed_time<<" seconds"<<"\n";
