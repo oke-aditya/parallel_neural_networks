@@ -46,7 +46,7 @@ const int height = 28;
 const int n1 = 784; // = 784, without bias neuron 
 const int n2 = 128; 
 const int n3 = 10; // Ten classes: 0 - 9
-const int epochs = 10;
+const int epochs = 5;
 const double learning_rate = 1e-3;
 const double momentum = 0.9;
 const double epsilon = 1e-3;
@@ -79,7 +79,7 @@ int ReverseInt (int i)
 }
 void Read_MNIST_training(int NumberOfImages, int DataOfAnImage)
 {
-    ifstream file ("../mnist/train-images.idx3-ubyte",ios::binary);
+    ifstream file ("mnist/train-images.idx3-ubyte",ios::binary);
     if (file.is_open())
     {
         int magic_number=0;
