@@ -22,10 +22,10 @@
 using namespace std;
 
 // Testing image file name
-const string testing_image_fn = "mnist/t10k-images.idx3-ubyte";
+const string testing_image_fn = "../mnist/t10k-images.idx3-ubyte";
 
 // Testing label file name
-const string testing_label_fn = "mnist/t10k-labels.idx1-ubyte";
+const string testing_label_fn = "../mnist/t10k-labels.idx1-ubyte";
 
 // Weights file name
 const string model_fn = "model-neural-network.dat";
@@ -34,7 +34,7 @@ const string model_fn = "model-neural-network.dat";
 const string report_fn = "testing-report.dat";
 
 // Number of testing samples
-const int nTesting = 10000;
+const int nTesting = 10;
 
 // Image size in MNIST database
 const int width = 28;

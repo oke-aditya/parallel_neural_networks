@@ -52,7 +52,7 @@ const int height = 28;
 const int n1 = width * height; // = 784, without bias neuron 
 const int n2 = 128; 
 const int n3 = 10; // Ten classes: 0 - 9
-const int epochs = 10;
+const int epochs = 5;
 const double learning_rate = 1e-3;
 const double momentum = 0.9;
 const double epsilon = 1e-3;
@@ -367,27 +367,32 @@ int main(int argc, char *argv[]) {
 		
 	// Neural Network Initialization
     init_array();
-    
-    for (int sample = 1; sample <= nTraining; ++sample) {
-        cout << "Sample " << sample << endl;
-        
-        // Getting (image, label)
-        input();
-		
-		// Learning process: Perceptron (Forward procedure) - Back propagation
-        int nIterations = learning_process();
 
-		// Write down the squared error
-		cout << "Total No. iterations: " << nIterations << endl;
-        printf("Error: %0.6lf\n\n", square_error());
-        report << "Sample " << sample << ": No. iterations = " << nIterations << ", Error = " << square_error() << endl;
-		
-		// Save the current network (weights)
-		if (sample % 100 == 0) {
-			cout << "Saving the network to " << model_fn << " file." << endl;
-			write_matrix(model_fn);
-		}
+    // 10 times
+    for (int e=0;e<epochs;e++){
+        for (int sample = 1; sample <= nTraining; ++sample) {
+            cout << "Sample " << sample << endl;
+            
+            // Getting (image, label)
+            input();
+            
+            // Learning process: Perceptron (Forward procedure) - Back propagation
+            int nIterations = learning_process();
+
+            // Write down the squared error
+            cout << "Total No. iterations: " << nIterations << endl;
+            printf("Error: %0.6lf\n\n", square_error());
+            report << "Sample " << sample << ": No. iterations = " << nIterations << ", Error = " << square_error() << endl;
+            
+            // Save the current network (weights)
+            if (sample % 100 == 0) {
+                cout << "Saving the network to " << model_fn << " file." << endl;
+                write_matrix(model_fn);
+            }
+        }
     }
+    
+
 	clock_t end = clock();
     double elapsed_time = double(end-begin)/CLOCKS_PER_SEC;
     cout<<"Time elapsed: "<<elapsed_time<<" seconds"<<"\n";
