@@ -1,4 +1,3 @@
-
 #include <omp.h>
 #include <iostream>
 #include <fstream>
@@ -17,6 +16,7 @@ using namespace std;
 
 #define NUM_THREADS 12
 // Training image file name
+
 const string training_image_fn = "../mnist/train-images.idx3-ubyte";
 
 // Training label file name

@@ -1,12 +1,3 @@
-// Software: Testing Artificial Neural Network for MNIST database
-// Author: Hy Truong Son
-// Major: BSc. Computer Science
-// Class: 2013 - 2016
-// Institution: Eotvos Lorand University
-// Email: sonpascal93@gmail.com
-// Website: http://people.inf.elte.hu/hytruongson/
-// Copyright 2015 (c). All rights reserved.
-
 #include <iostream>
 #include <fstream>
 #include <cstring>
