@@ -79,7 +79,7 @@ int ReverseInt (int i)
 }
 void Read_MNIST_training(int NumberOfImages, int DataOfAnImage)
 {
-    ifstream file ("../mnist/train-images.idx3-ubyte",ios::binary);
+    ifstream file ("mnist/train-images.idx3-ubyte",ios::binary);
     if (file.is_open())
     {
         int magic_number=0;
