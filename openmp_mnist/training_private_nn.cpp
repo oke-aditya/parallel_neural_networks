@@ -252,7 +252,7 @@ int main(int argc, char *argv[]) {
     clock_t begin = clock();
 	init_global();
     int sample_per_thread = nTraining / NUM_THREADS;
-    #pragma omp parallel num_threads(NUM_THREADS) default(none) shared(cout,mnist_label_data,mnist_training_data,sample_per_thread,global_w2,global_w1)
+    #pragma omp parallel num_threads(NUM_THREADS) default(none) shared(cout, model_fn, mnist_label_data,mnist_training_data,sample_per_thread,global_w2,global_w1)
     {
         // From layer 1 to layer 2. Or: Input layer - Hidden layer
         double w1[784][128], delta1[784][128], out1[784];
@@ -396,10 +396,10 @@ int main(int argc, char *argv[]) {
                         }
                     }
                 //}
-                
             }                       
+            printf("Epoch finished %d",r);
+            write_matrix(model_fn);
         }
-        
     }
 	clock_t end = clock();
     double elapsed_secs = double(end - begin) / CLOCKS_PER_SEC;
