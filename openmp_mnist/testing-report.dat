@@ -1,12 +1,12 @@
-Sample 1: NO.  Label = 7. Predict = 1. Error = 0.5
+Sample 1: NO.  Label = 7. Predict = 3. Error = 0.5
 Sample 2: NO.  Label = 2. Predict = 1. Error = 0.5
 Sample 3: YES. Label = 1. Predict = 1. Error = 0.5
-Sample 4: NO.  Label = 0. Predict = 2. Error = 0.5
-Sample 5: NO.  Label = 4. Predict = 1. Error = 0.5
-Sample 6: YES. Label = 1. Predict = 1. Error = 0.5
-Sample 7: NO.  Label = 4. Predict = 1. Error = 0.5
-Sample 8: NO.  Label = 9. Predict = 1. Error = 0.5
-Sample 9: NO.  Label = 5. Predict = 1. Error = 0.5
-Sample 10: NO.  Label = 9. Predict = 1. Error = 0.5
+Sample 4: NO.  Label = 0. Predict = 3. Error = 0.5
+Sample 5: NO.  Label = 4. Predict = 6. Error = 0.5
+Sample 6: NO.  Label = 1. Predict = 4. Error = 0.5
+Sample 7: NO.  Label = 4. Predict = 9. Error = 0.5
+Sample 8: NO.  Label = 9. Predict = 7. Error = 0.5
+Sample 9: NO.  Label = 5. Predict = 9. Error = 0.5
+Sample 10: YES. Label = 9. Predict = 9. Error = 0.5
 Number of correct samples: 2 / 10
 Accuracy: 20

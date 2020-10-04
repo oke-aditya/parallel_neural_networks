@@ -240,8 +240,8 @@ void write_matrix(string file_name) {
 // +--------------+
 
 int main(int argc, char *argv[]) {
-    Read_MNIST_training(500,784);
-    Read_MNIST_label(500,10);
+    Read_MNIST_training(nTraining,784);
+    Read_MNIST_label(nTraining,10);
     
     about();
 
@@ -293,7 +293,7 @@ int main(int argc, char *argv[]) {
 
         for(int r =0;r<epochs;r++){
             #pragma omp for 
-            for (int sample =0; sample < 500; ++sample) {
+            for (int sample =0; sample < nTraining; ++sample) {
                 //cout << omp_get_thread_num() << " : " << omp_get_num_threads() << endl;
                 // GET SAMPLE
                 for (int i =0; i < 784; ++i) {
@@ -377,8 +377,8 @@ int main(int argc, char *argv[]) {
                         }
                     }
                 }
-                if((sample + 1) % sample_per_thread == 0)
-                {
+                //if((sample + 1) % sample_per_thread == 0)
+                //{
                     for (int i =0; i < n1; ++i) {
                         for (int j = 0; j < n2 ; j++ ) {
                             #pragma omp critical
@@ -395,7 +395,7 @@ int main(int argc, char *argv[]) {
                             }
                         }
                     }
-                }
+                //}
                 
             }                       
         }
@@ -406,13 +406,13 @@ int main(int argc, char *argv[]) {
     cout<<"Elapsed time: "<<elapsed_secs<<" seconds"<<"\n";
     for (int i =0; i < n1; ++i) {
         for (int j = 0; j < n2 ; j++ ) {
-           // global_w1[i][j] /= NUM_THREADS;
+           global_w1[i][j] /= NUM_THREADS;
             
         }
     }
     for (int i =0; i < n2; ++i) {
         for (int j = 0; j < n3 ; j++ ) {
-          //  global_w2[i][j] /= NUM_THREADS;
+          global_w2[i][j] /= NUM_THREADS;
             
         }
     }
