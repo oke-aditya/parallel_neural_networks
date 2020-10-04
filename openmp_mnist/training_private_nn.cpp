@@ -399,7 +399,7 @@ int main(int argc, char *argv[]) {
                 //}
             }                       
             printf("Epoch finished %d",r);
-            write_matrix(model_fn);
+            // write_matrix(model_fn);
         }
     }
 	clock_t end = clock();
