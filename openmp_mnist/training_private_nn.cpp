@@ -185,7 +185,7 @@ void init_global(){
     for (int i =0; i < n1; ++i) {
         for (int j =0; j < n2; ++j) {
             
-            global_w1[i][j] = 0;
+            global_w1[i][j] = 0.2;
         }
 	}
 	
@@ -193,7 +193,7 @@ void init_global(){
     for (int i =0; i < n2; ++i) {
         for (int j =0; j < n3; ++j) {
             
-            global_w2[i][j] = 0;
+            global_w2[i][j] = 0.3;
         }
 	}
 }
