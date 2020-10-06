@@ -29,7 +29,7 @@ const string model_fn = "model-neural-network.dat";
 const string report_fn = "training-report.dat";
 
 // Number of training samples
-const int nTraining = 5000;
+const int nTraining = 50000;
 
 // Image size in MNIST database
 const int width = 28;
@@ -79,7 +79,8 @@ int ReverseInt (int i)
 }
 void Read_MNIST_training(int NumberOfImages, int DataOfAnImage)
 {
-    ifstream file ("mnist/train-images.idx3-ubyte",ios::binary);
+    //"mnist/train-images.idx3-ubyte"
+    ifstream file (training_image_fn,ios::in | ios::binary);
     if (file.is_open())
     {
         int magic_number=0;
@@ -117,7 +118,8 @@ void Read_MNIST_training(int NumberOfImages, int DataOfAnImage)
 }
 void Read_MNIST_label(int number_of_images,int i)
 {
-    ifstream file ("../mnist/train-labels.idx1-ubyte",ios::binary);
+    //"../mnist/train-labels.idx1-ubyte"
+    ifstream file (training_label_fn,ios::in | ios::binary);
 
     if (file.is_open())
     {
@@ -378,8 +380,8 @@ int main(int argc, char *argv[]) {
                         }
                     }
                 }
-                //if((sample + 1) % sample_per_thread == 0)
-                //{
+                if((sample + 1) % sample_per_thread == 0)
+                {
                     for (int i =0; i < n1; ++i) {
                         for (int j = 0; j < n2 ; j++ ) {
                             #pragma omp critical
@@ -396,10 +398,9 @@ int main(int argc, char *argv[]) {
                             }
                         }
                     }
-                //}
+                }
             }                       
-            printf("Epoch finished %d",r);
-            write_matrix(model_fn);
+            //write_matrix(model_fn);
         }
     }
 	clock_t end = clock();
