@@ -29,7 +29,7 @@ const string model_fn = "model-neural-network.dat";
 const string report_fn = "training-report.dat";
 
 // Number of training samples
-const int nTraining = 50000;
+const int nTraining = 5000;
 
 // Image size in MNIST database
 const int width = 28;
